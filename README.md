@@ -4,13 +4,9 @@ In this lab, you're going to use PySpark's RDD and DataFrame interfaces to solve
 
 ## The Patent join problem explained
 
-The goal of the patent join problem is to find *self-state patent citations*. You're given two datasets, `cite75_99.txt.gz` and `apat63_99.txt.gz`.
+The goal of the patent join problem is to find *self-state patent citations*. You're given two datasets, `cite75_99.txt.gz` and `apat63_99.txt.gz`. The `Makefile` contains rules to download those data files. **N.B.** Rember to not check in those file into your git repo!
 
-You can download these gzip'd datasets at these links:
-* https://storage.googleapis.com/csci4253/apat63_99.txt.gz
-* https://storage.googleapis.com/csci4253/cite75_99.txt.gz
-
-PySpark can automatically uncompress gzip'd files.
+PySpark can automatically process the gzip'd files -- you don't need to uncompress them. Code for reading the files are included in the two Jupyter notebooks.
 
 The `acite75_99.txt` file contains a citation index, of the form
 ```
@@ -82,7 +78,7 @@ There are some complications:
 * Not all patents in the 'cited' table are in the 'patent' table
 * Not all patents cite other patents
 * Not all patents are cited by other patents
-* Lastly, the NaN/Null value used by PySpark makes sorting values involving Nan/Null and numeric values problematic; you're best filtering out the `null` values and then sorting.
+* Lastly, the NaN/Null value used by PySpark makes sorting values involving Nan/Null and numeric values problematic; you're best filtering out the `null` values and then sorting or replacing those values with meaningful values.
 
 ## What you need to do and hand in
 
@@ -100,9 +96,8 @@ You should document your solution process in the Jupyter notebook -- just add Ma
 
 In both the RDD and DataFrame form, it's possible to "cache" an intermediate RDD/Dataframe (using the `.cache()` function). This can be useful when you're trying to figure out how to extract the appropriate data, etc. This is particularly important for the output of the `.join()` operations and particularly for the RDD solution -- that operation is *slow* and having to recompute it each time you look at data or attempt the next step is frustrating.
 
-The starter code for the RDD solution is setup to use just 200,000 lines of each of the patent and citation data. This should result in a "new patent" table like:
+For the RDD solution, we recommend that you work with a sample of the data rather than the entire dataset. You can either use *e.g.* `.sample(False, 0.05)` to sample the data to 5% of the original or you can take *e.g.* the first 200,000 lines of each of the patent and citation data.
 
-![Top partial 10 RDD self-state citations](top-subsample-rdd.png)
+The solution for the Dataframe and RDD methods should be the same. My recommendation is that you first do the Dataframe method because that will help you work through your algorithm. You can then switch to using the RDD methods using a sub-sample of the data and then run it for the full data set.
 
-The dataframe solution requires you to write less code (e.g. `lambda` expressions to extract data) but it requires more searching for good manuals and methods due to the (IMHO) poor documentation for the PySpark dataframe API.
-
+**Once you've debugged your solution, you should run your solution for the full dataset of citations & patents.**
